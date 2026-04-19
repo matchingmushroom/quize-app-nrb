@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>QuizFlow · No Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- ========== CATEGORY SCREEN (main entry) ========== -->
+    <div id="category-screen" class="screen active">
+      <header class="app-header glass">
+        <div class="header-content">
+          <h1 class="logo-text">Quiz<span>Flow</span></h1>
+        </div>
+      </header>
+      
+      <main class="category-content">
+        <h2 class="section-title">Choose a Category</h2>
+        <div id="category-list" class="category-grid"></div>
+        
+        <div class="mode-selector glass">
+          <button id="practice-mode-btn" class="mode-btn active">
+            <i class="fas fa-lightbulb"></i> Practice
+          </button>
+          <button id="exam-mode-btn" class="mode-btn">
+            <i class="fas fa-clock"></i> Exam
+          </button>
+        </div>
+        
+        <div class="name-input-container glass">
+          <label for="player-name">Your Name (for leaderboard)</label>
+          <input type="text" id="player-name" placeholder="Enter your name" maxlength="20" value="Player">
+        </div>
+        
+        <div class="offline-indicator glass" id="offline-badge">
+          <i class="fas fa-cloud-offline"></i> Offline Mode · Using cached questions
+        </div>
+        
+        <button id="start-quiz-btn" class="btn-primary btn-start" disabled>
+          Start Quiz <i class="fas fa-arrow-right"></i>
+        </button>
+        
+        <button id="view-leaderboard-btn" class="btn-secondary" style="margin-top: 0.5rem;">
+          <i class="fas fa-trophy"></i> View Leaderboard
+        </button>
+      </main>
+    </div>
+
+    <!-- ========== QUIZ SCREEN ========== -->
+    <div id="quiz-screen" class="screen">
+      <header class="quiz-header glass">
+        <div class="quiz-progress">
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+          <div class="quiz-meta">
+            <span id="question-counter" class="counter"><i class="far fa-list-alt"></i> 1/20</span>
+            <span id="timer-display" class="timer-badge">
+              <i class="far fa-hourglass"></i> <span id="timer-value">20:00</span>
+            </span>
+          </div>
+        </div>
+      </header>
+      
+      <main class="quiz-main">
+        <div class="question-card glass">
+          <h3 id="question-text" class="question-text">Loading...</h3>
+          <div id="options-container" class="options-container"></div>
+          <div id="explanation-box" class="explanation-box"></div>
+        </div>
+      </main>
+      
+      <footer class="quiz-footer">
+        <button id="next-btn" class="btn-primary btn-next" disabled>
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </footer>
+    </div>
+
+    <!-- ========== RESULT SCREEN ========== -->
+    <div id="result-screen" class="screen">
+      <div class="result-container">
+        <div class="result-card glass">
+          <div class="trophy-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h2 class="result-title">Quiz Complete!</h2>
+          
+          <div class="score-ring">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path id="score-circle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="20.35" class="percentage" id="final-score">0</text>
+            </svg>
+            <span class="score-label">out of 20</span>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <i class="fas fa-check-circle text-success"></i>
+              <span id="correct-count">0</span>
+              <label>Correct</label>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-times-circle text-danger"></i>
+              <span id="incorrect-count">0</span>
+              <label>Incorrect</label>
+            </div>
+            <div class="stat-item">
+              <i class="far fa-clock"></i>
+              <span id="total-time">0</span>
+              <label>Seconds</label>
+            </div>
+          </div>
+          
+          <div class="result-actions">
+            <button id="play-again-btn" class="btn-secondary">
+              <i class="fas fa-redo-alt"></i> Play Again
+            </button>
+            <button id="result-leaderboard-btn" class="btn-primary">
+              <i class="fas fa-trophy"></i> Leaderboard
+            </button>
+          </div>
+        </div>
+        
+        <div class="review-section glass">
+          <h3 class="review-title"><i class="fas fa-list-ul"></i> Answer Review</h3>
+          <div id="answer-review" class="answer-review-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== LEADERBOARD SCREEN ========== -->
+    <div id="leaderboard-screen" class="screen">
+      <header class="app-header glass">
+        <div class="header-content">
+          <button id="back-from-leaderboard" class="icon-btn" aria-label="Back">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h2 class="header-title">Local Leaderboard</h2>
+          <div style="width: 40px;"></div>
+        </div>
+      </header>
+      
+      <div class="leaderboard-list-container">
+        <div id="local-leaderboard-list" class="leaderboard-list"></div>
+        <button id="clear-leaderboard-btn" class="btn-secondary" style="margin: 1rem;">
+          <i class="fas fa-trash-alt"></i> Clear History
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== LOADING OVERLAY ========== -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="skeleton-loader">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
