@@ -69,14 +69,19 @@ async function registerServiceWorker() {
 async function loadCategories() {
   showLoading(true);
   try {
-    let cats = await quizCache.getAllCategories();
-    if (cats.length === 0) {
-      cats = ['Science', 'History', 'Math', 'General Knowledge', 'Technology'];
+    const response = await fetch(`${GAS_URL}?getCategories=true`);
+    const data = await response.json();
+    
+    if (data.categories && data.categories.length > 0) {
+      categoriesList = data.categories;
+    } else {
+      // Fallback to the categories we know exist (from your log)
+      categoriesList = ['Banking', 'NRB History', 'Monetary Policy', 'Economics', 'International Economy', 'Financial Institutions'];
     }
-    categoriesList = cats;
-    renderCategories(cats);
+    renderCategories(categoriesList);
   } catch (err) {
-    categoriesList = ['Science', 'History', 'Math', 'General'];
+    console.warn('Could not fetch categories, using fallback', err);
+    categoriesList = ['Banking', 'NRB History', 'Monetary Policy', 'Economics', 'International Economy', 'Financial Institutions'];
     renderCategories(categoriesList);
   } finally {
     showLoading(false);
