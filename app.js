@@ -68,24 +68,34 @@ async function registerServiceWorker() {
 // ==================== CATEGORIES ====================
 async function loadCategories() {
   showLoading(true);
-  try {
-    const response = await fetch(`${GAS_URL}?getCategories=true`);
-    const data = await response.json();
+  
+  return new Promise((resolve) => {
+    const callbackName = 'jsonp_categories_' + Date.now();
+    window[callbackName] = (data) => {
+      delete window[callbackName];
+      document.body.removeChild(script);
+      
+      if (data.categories && data.categories.length > 0) {
+        categoriesList = data.categories;
+      } else {
+        categoriesList = ['Banking', 'NRB History', 'Monetary Policy', 'Economics', 'International Economy', 'Financial Institutions'];
+      }
+      renderCategories(categoriesList);
+      showLoading(false);
+      resolve();
+    };
     
-    if (data.categories && data.categories.length > 0) {
-      categoriesList = data.categories;
-    } else {
-      // Fallback to the categories we know exist (from your log)
+    const script = document.createElement('script');
+    script.src = `${GAS_URL}?getCategories=true&callback=${callbackName}`;
+    script.onerror = () => {
+      console.warn('JSONP categories failed, using fallback');
       categoriesList = ['Banking', 'NRB History', 'Monetary Policy', 'Economics', 'International Economy', 'Financial Institutions'];
-    }
-    renderCategories(categoriesList);
-  } catch (err) {
-    console.warn('Could not fetch categories, using fallback', err);
-    categoriesList = ['Banking', 'NRB History', 'Monetary Policy', 'Economics', 'International Economy', 'Financial Institutions'];
-    renderCategories(categoriesList);
-  } finally {
-    showLoading(false);
-  }
+      renderCategories(categoriesList);
+      showLoading(false);
+      resolve();
+    };
+    document.body.appendChild(script);
+  });
 }
 
 function renderCategories(cats) {
