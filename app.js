@@ -1,7 +1,7 @@
 import { quizCache } from './db.js';
 
 // ==================== CONFIGURATION ====================
-const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+const GAS_URL = 'https://script.google.com/macros/s/Kfycbzbw507FOlUUe8M8Oevxmo4pjN6VvU7lOSyA1cxlk0ZJVKKLN2rsNlv8Ah4NezBwvJ4/exec';
 
 // ==================== GLOBAL STATE ====================
 let selectedCategory = null;
